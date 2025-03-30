@@ -25,6 +25,9 @@ class ResourceLoader
         ALLEGRO_BITMAP* get_text_container() const;
         ALLEGRO_BITMAP* get_name_container() const;
         ALLEGRO_BITMAP* get_background(int) const;
+        Scene* get_scene(int) const;
+        Scene** get_all_loaded_scenes() const;
+        int get_num_scenes() const;
     
     private:
         ALLEGRO_FONT* font;
@@ -32,6 +35,8 @@ class ResourceLoader
         ALLEGRO_BITMAP* nameContainer;
         ALLEGRO_BITMAP** backgrounds;
         int numBackgrounds;
+        Scene** loadedScenes;
+        int numScenes;
 };
 
 #endif

@@ -12,7 +12,9 @@ ResourceLoader::ResourceLoader()
     textContainer = al_create_bitmap(0, 0);
     nameContainer = al_create_bitmap(0, 0);
     numBackgrounds = 0;
+    numScenes = 0;
     backgrounds = NULL;
+    loadedScenes = NULL;
 }
 ResourceLoader::~ResourceLoader()
 {
@@ -21,6 +23,10 @@ ResourceLoader::~ResourceLoader()
     al_destroy_bitmap(nameContainer);
     for (int i = 0; i < numBackgrounds; i++)
         al_destroy_bitmap(backgrounds[i]);
+    for (int i = 0; i < numScenes; i++)
+    {
+        delete loadedScenes[i];
+    }
 }
 
 void ResourceLoader::load(int bank)
@@ -48,4 +54,16 @@ ALLEGRO_BITMAP* ResourceLoader::get_name_container() const
 ALLEGRO_BITMAP* ResourceLoader::get_background(int index) const
 {
     return backgrounds[index];
+}
+Scene* ResourceLoader::get_scene(int index) const
+{
+    return loadedScenes[index];
+}
+Scene** ResourceLoader::get_all_loaded_scenes() const
+{
+    return loadedScenes;
+}
+int ResourceLoader::get_num_scenes() const
+{
+    return numScenes;
 }
