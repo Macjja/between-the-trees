@@ -37,6 +37,8 @@ class Window
         int get_win_height();
         int get_pix_width();
         int get_pix_height();
+        int get_bitmap_x();
+        int get_bitmap_y();
         
         void resize(int width, int height);
         void resize_window(int width, int height);

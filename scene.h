@@ -13,12 +13,13 @@ class Scene
         void click_event(int, int) const;
         void key_press_event(int) const;
         void dialogue_end_event() const;
-        int& get_plot();
+        void set_click_event(void (*)(Scene*, int, int));
+        void set_key_press_event(void (*)(Scene*, int, int));
+        void set_dialogue_end_event(void (*)(Scene*, int, int));
     private:
         void (*clickEvent)(Scene*, int, int);
         void (*keyPressEvent)(Scene*, int);
         void (*dialogueEndEvent)(Scene*);
-        int plot;
         ALLEGRO_BITMAP* background;
 };
 

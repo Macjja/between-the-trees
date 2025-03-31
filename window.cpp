@@ -91,6 +91,14 @@ int Window::get_pix_height()
 {
     return pixHeight;
 }
+int Window::get_bitmap_x()
+{
+    return bmpx;
+}
+int Window::get_bitmap_y()
+{
+    return bmpy;
+}
 
 void Window::resize(int width, int height)
 {

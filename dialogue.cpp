@@ -82,6 +82,8 @@ bool Dialogue::next_line()
     currentLine++;
     if (currentLine >= text.size())
         return false;
+    state = 0;
+    currentChar = 0;
     return true;
 }
 string Dialogue::get_current_line() const

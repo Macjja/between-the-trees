@@ -7,26 +7,34 @@ Scene::Scene(ResourceLoader* data, void (*ce)(Scene*, int, int), void (*kpe)(Sce
     clickEvent = ce;
     keyPressEvent = kpe;
     dialogueEndEvent = dee;
-    plot = 0;
     background = data.backgrounds[bgIndex];
 }
 
-void Scene::click_event(int x, int y)
+void Scene::click_event(int x, int y) const
 {
     if (clickEvent != NULL)
         clickEvent(this, x, y);
 }
-void Scene::key_press_event(int keyCode)
+void Scene::key_press_event(int keyCode) const
 {
     if (keyPressEvent != NULL)
         keyPressEvent(this, keyCode);
 }
-void Scene::dialogue_end_event()
+void Scene::dialogue_end_event() const
 {
     if (dialogueEndEvent != NULL)
         dialogueEndEvent(this);
 }
-int& Scene::get_plot()
+
+void Scene::set_click_event(void (*ce)(Scene*, int, int))
 {
-    return plot;
+    clickEvent = ce;
+}
+void Scene::set_key_press_event(void (*kpe)(Scene*, int))
+{
+    keyPressEvent = kpe;
+}
+void Scene::set_dialogue_end_event(void (*dee)(Scene*))
+{
+    dialogueEndEvent = dee;
 }

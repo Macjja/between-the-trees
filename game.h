@@ -21,9 +21,13 @@ class Game {
         ResourceLoader& get_data();
         Scene& get_scene();
         int& get_scene_index();
-        Dialogue& get_dialogue_box();
+        void set_dialogue_box(Dialogue*);
+        Dialogue* get_dialogue_box() const;
         void set_flag(int, bool);
         bool get_flag(int) const;
+        void set_mouse_coords(int, int);
+        int get_mouse_x() const;
+        int get_mouse_y() const;
     private:
         Window* window;
         ResourceLoader* data;
@@ -32,6 +36,8 @@ class Game {
         int currentScene;
         Dialogue* dialogueBox;
         int flags;
+        int mouseX;
+        int mouseY;
 };
 
 #endif

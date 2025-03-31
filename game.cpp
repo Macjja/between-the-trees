@@ -37,6 +37,9 @@ Game::Game(void* (*event_proc)(ALLEGRO_THREAD*, void*), void* (*drawing_proc)(AL
 }
 Game::~Game()
 {
+    al_join_thread(eventThread);
+    al_join_thread(drawingThread);
+    
     al_destroy_thread(eventThread);
     al_destroy_thread(drawingThread);
     
@@ -67,7 +70,11 @@ int& Game::get_scene_index()
 {
     return currentScene;
 }
-Dialogue& Game::get_dialogue_box()
+void Game::set_dialogue_box(Dialogue* db)
+{
+    dialogueBox = db;
+}
+Dialogue* Game::get_dialogue_box() const
 {
     return dialogueBox;
 }
@@ -86,4 +93,18 @@ void Game::set_flag(int flag, bool val)
 bool Game::get_flag(int flag)
 {
     return (check & flags == check);
+}
+
+void Game::set_mouse_coords(int x, int y)
+{
+    mouseX = x;
+    mouseY = y;
+}
+int Game::get_mouse_x() const
+{
+    return mouseX;
+}
+int Game::get_mouse_y() const
+{
+    return mouseY;
 }
