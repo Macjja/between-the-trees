@@ -8,8 +8,8 @@
 #include <allegro5/allegro_primitives.h>
 #include <allegro5/allegro_image.h>
 #include <allegro5/allegro_font.h>
-#include "window.cpp"
-#include "resource.cpp"
+#include "window.h"
+#include "resource.h"
 #include "scene.h"
 #include "dialogue.h"
 
@@ -19,7 +19,7 @@ class Game {
         ~Game();
         Window& get_window();
         ResourceLoader& get_data();
-        Scene& get_scene();
+        Scene* get_scene();
         int& get_scene_index();
         void set_dialogue_box(Dialogue*);
         Dialogue* get_dialogue_box() const;
@@ -28,6 +28,8 @@ class Game {
         void set_mouse_coords(int, int);
         int get_mouse_x() const;
         int get_mouse_y() const;
+        void stop();
+        bool should_stop();
     private:
         Window* window;
         ResourceLoader* data;
@@ -38,6 +40,7 @@ class Game {
         int flags;
         int mouseX;
         int mouseY;
+        bool shouldStop;
 };
 
 #endif

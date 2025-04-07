@@ -14,6 +14,7 @@
 #define RESOURCE_H_INCLUDED
 
 #include <allegro5/allegro_font.h>
+#include "scene.h"
 
 class ResourceLoader
 {

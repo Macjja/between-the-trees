@@ -4,22 +4,22 @@
 #define SCENE_H_INCLUDED
 
 #include <allegro5/allegro.h>
-#include "resource.h"
 
 class Scene
 {
     public:
-        Scene(ResourceLoader*, void (*)(Scene*, int, int), void (*)(Scene*, int), void (*)(Scene*), int);
+        Scene(ALLEGRO_BITMAP*, void (*)(const Scene*), void (*)(const Scene*, int, int), void (*)(const Scene*, int), void (*)(const Scene*));
         void click_event(int, int) const;
         void key_press_event(int) const;
         void dialogue_end_event() const;
-        void set_click_event(void (*)(Scene*, int, int));
-        void set_key_press_event(void (*)(Scene*, int, int));
-        void set_dialogue_end_event(void (*)(Scene*, int, int));
+        void set_click_event(void (*)(const Scene*, int, int));
+        void set_key_press_event(void (*)(const Scene*, int));
+        void set_dialogue_end_event(void (*)(const Scene*));
+        void draw();
     private:
-        void (*clickEvent)(Scene*, int, int);
-        void (*keyPressEvent)(Scene*, int);
-        void (*dialogueEndEvent)(Scene*);
+        void (*clickEvent)(const Scene*, int, int);
+        void (*keyPressEvent)(const Scene*, int);
+        void (*dialogueEndEvent)(const Scene*);
         ALLEGRO_BITMAP* background;
 };
 

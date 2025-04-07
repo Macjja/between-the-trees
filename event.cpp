@@ -1,40 +1,44 @@
 /* Implementation of the event thread */
 
-void* event_reader(ALLEGRO_THREAD* thr, void* arg)
+#include "event.h"
+
+void* event_listener(ALLEGRO_THREAD* thr, void* arg)
 {
     Game* game = (Game*)arg;
-    Window* window = game->get_window();
+    Window& window = game->get_window();
     
     bool shiftKey, ctrlKey, altKey;
     
     ALLEGRO_MOUSE_STATE mouseState;
     
     ALLEGRO_EVENT_QUEUE* queue = al_create_event_queue();
-    al_register_event_source(events, al_get_display_event_source(window->get_display()));
-    al_register_event_source(events, al_get_keyboard_event_source());
-    al_register_event_source(events, al_get_mouse_event_source());
+    al_register_event_source(queue, al_get_display_event_source(window.get_display()));
+    al_register_event_source(queue, al_get_keyboard_event_source());
+    al_register_event_source(queue, al_get_mouse_event_source());
     ALLEGRO_EVENT event;
+    
+    Dialogue* dialogueBox;
     
     while (true)
     {
-        al_wait_for_event(queue, &event);
+        dialogueBox = game->get_dialogue_box();
         
         al_get_mouse_state(&mouseState);
-        Game->set_mouse_coords(
-            (mouseState.x - window->get_bitmap_x()) / window->get_pix_width(),
-            (mouseState.y - window->get_bitmap_y()) / window->get_pix_height()
+        game->set_mouse_coords(
+            (mouseState.x - window.get_bitmap_x()) / window.get_pix_width(),
+            (mouseState.y - window.get_bitmap_y()) / window.get_pix_height()
         );
         
-        Dialogue* dialogueBox = game->get_dialogue_box();
+        al_wait_for_event(queue, &event);
         
         if (event.type == ALLEGRO_EVENT_DISPLAY_RESIZE)
         {
-            al_acknowledge_resize(window->get_display());
-            window->fit_screen();
+            al_acknowledge_resize(window.get_display());
+            window.fit_screen();
         }
         else if (event.type == ALLEGRO_EVENT_DISPLAY_CLOSE)
         {
-            delete game;
+            game->stop();
         }
         else if (event.type == ALLEGRO_EVENT_KEY_DOWN)
         {
@@ -46,12 +50,12 @@ void* event_reader(ALLEGRO_THREAD* thr, void* arg)
                 altKey = true;
             else if (event.keyboard.keycode == ALLEGRO_KEY_F11 || (altKey && event.keyboard.keycode == ALLEGRO_KEY_ENTER))
             {
-                window->toggle_fullscreen();
-                window->fit_screen();
+                window.toggle_fullscreen();
+                window.fit_screen();
             }
             else if (ctrlKey && altKey && event.keyboard.keycode == ALLEGRO_KEY_F)
             {
-                window->set_fit_mode(w->get_fit_mode() + 1);
+                window.set_fit_mode(window.get_fit_mode() + 1);
             }
             else if (event.keyboard.keycode == ALLEGRO_KEY_DOWN && dialogueBox != NULL)
             {
@@ -71,12 +75,12 @@ void* event_reader(ALLEGRO_THREAD* thr, void* arg)
                     {
                         delete dialogueBox;
                         game->set_dialogue_box(NULL);
-                        game->get_scene().dialogue_end_event();
+                        game->get_scene()->dialogue_end_event();
                     }
                 }
             }
-            else
-                game->get_scene().key_press_event(event.keyboard.keycode);
+            else if (game->get_scene() != NULL)
+                game->get_scene()->key_press_event(event.keyboard.keycode);
         }
         else if (event.type == ALLEGRO_EVENT_KEY_UP)
         {
@@ -99,16 +103,18 @@ void* event_reader(ALLEGRO_THREAD* thr, void* arg)
                     {
                         delete dialogueBox;
                         game->set_dialogue_box(NULL);
-                        game->get_scene().dialogue_end_event();
+                        game->get_scene()->dialogue_end_event();
                     }
                 }
             }
-            else
-                game->get_scene().click_event(mouseState.x, mouseState.y);
+            else if (game->get_scene() != NULL)
+                game->get_scene()->click_event(mouseState.x, mouseState.y);
         }
         
-        if (al_get_thread_should_stop(thr))
+        if (game->should_stop())
+        {
             break;
+        }
     }
     al_destroy_event_queue(queue);
     return NULL;

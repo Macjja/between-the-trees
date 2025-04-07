@@ -4,17 +4,6 @@
 
 Game::Game(void* (*event_proc)(ALLEGRO_THREAD*, void*), void* (*drawing_proc)(ALLEGRO_THREAD*, void*))
 {
-    al_init();
-    al_install_keyboard();
-    al_install_mouse();
-    al_init_primitives_addon();
-    al_init_image_addon();
-    al_init_font_addon();
-    
-    al_set_new_display_flags(ALLEGRO_OPENGL | ALLEGRO_RESIZABLE);
-    al_set_new_display_option(ALLEGRO_CAN_DRAW_INTO_BITMAP, 1, ALLEGRO_REQUIRE);
-    al_set_new_bitmap_flags(ALLEGRO_VIDEO_BITMAP);
-    
     window = new Window(640, 480, 1280, 960);
     window->set_title("Between the Trees");
     
@@ -31,40 +20,35 @@ Game::Game(void* (*event_proc)(ALLEGRO_THREAD*, void*), void* (*drawing_proc)(AL
     
     dialogueBox = NULL;
     flags = 0;
+    shouldStop = false;
     
     al_start_thread(eventThread);
     al_start_thread(drawingThread);
 }
 Game::~Game()
 {
-    al_join_thread(eventThread);
-    al_join_thread(drawingThread);
-    
+    al_join_thread(eventThread, NULL);
+    al_join_thread(drawingThread, NULL);
     al_destroy_thread(eventThread);
     al_destroy_thread(drawingThread);
     
     delete data;
     delete window;
-    
-    al_shutdown_font_addon();
-    al_shutdown_image_addon();
-    al_shutdown_primitives_addon();
-    al_uninstall_keyboard();
-    al_uninstall_mouse();
-    al_uninstall_system();
 }
 
 Window& Game::get_window()
 {
-    return window;
+    return *window;
 }
 ResourceLoader& Game::get_data()
 {
-    return data;
+    return *data;
 }
-Scene& Game::get_scene()
+Scene* Game::get_scene()
 {
-    return data->get_scene(currentScene);
+    if (currentScene >= 0)
+        return data->get_scene(currentScene);
+    return NULL;
 }
 int& Game::get_scene_index()
 {
@@ -84,14 +68,15 @@ void Game::set_flag(int flag, bool val)
     int check = pow(2, flag);
     if (flag < 32)
     {
-        if (check & flags == check) && !val)
+        if (check & flags == check && !val)
             flags -= check;
-        else if (!(check & flags == check) && val)
+        else if (check & flags != check && val)
             flags += check;
     }
 }
-bool Game::get_flag(int flag)
+bool Game::get_flag(int flag) const
 {
+    int check = pow(2, flag);
     return (check & flags == check);
 }
 
@@ -107,4 +92,13 @@ int Game::get_mouse_x() const
 int Game::get_mouse_y() const
 {
     return mouseY;
+}
+
+void Game::stop()
+{
+    shouldStop = true;
+}
+bool Game::should_stop()
+{
+    return shouldStop;
 }

@@ -2,12 +2,14 @@
 
 #include "scene.h"
 
-Scene::Scene(ResourceLoader* data, void (*ce)(Scene*, int, int), void (*kpe)(Scene*, int), void (*dee)(Scene*), int bgIndex)
+Scene::Scene(ALLEGRO_BITMAP* bg, void (*startingFunc)(const Scene*), void (*ce)(const Scene*, int, int), void (*kpe)(const Scene*, int), void (*dee)(const Scene*))
 {
     clickEvent = ce;
     keyPressEvent = kpe;
     dialogueEndEvent = dee;
-    background = data.backgrounds[bgIndex];
+    background = bg;
+    
+    startingFunc(this);
 }
 
 void Scene::click_event(int x, int y) const
@@ -26,15 +28,20 @@ void Scene::dialogue_end_event() const
         dialogueEndEvent(this);
 }
 
-void Scene::set_click_event(void (*ce)(Scene*, int, int))
+void Scene::set_click_event(void (*ce)(const Scene*, int, int))
 {
     clickEvent = ce;
 }
-void Scene::set_key_press_event(void (*kpe)(Scene*, int))
+void Scene::set_key_press_event(void (*kpe)(const Scene*, int))
 {
     keyPressEvent = kpe;
 }
-void Scene::set_dialogue_end_event(void (*dee)(Scene*))
+void Scene::set_dialogue_end_event(void (*dee)(const Scene*))
 {
     dialogueEndEvent = dee;
+}
+
+void Scene::draw()
+{
+    al_draw_bitmap(background, 0, 0, 0);
 }
