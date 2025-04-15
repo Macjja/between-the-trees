@@ -1,4 +1,5 @@
 #include <allegro5/allegro.h>
+#include <allegro5/allegro_primitives.h>
 #include "game.h"
 #include "event.h"
 #include "draw.h"
@@ -13,8 +14,8 @@ int main()
     al_init_font_addon();
     
     al_set_new_display_flags(ALLEGRO_OPENGL | ALLEGRO_RESIZABLE);
+    al_set_new_display_option(ALLEGRO_VSYNC, 2, ALLEGRO_REQUIRE);
     al_set_new_display_option(ALLEGRO_CAN_DRAW_INTO_BITMAP, 1, ALLEGRO_REQUIRE);
-    al_set_new_bitmap_flags(ALLEGRO_VIDEO_BITMAP);
     
     Game* game = new Game(event_listener, drawer);
     

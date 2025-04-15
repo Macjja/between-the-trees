@@ -1,9 +1,15 @@
 /* Implementation of the Window class */
 
+#include <iostream>
 #include "window.h"
+#include <allegro5/allegro_primitives.h>
+
+using namespace std;
 
 Window::Window(int width, int height, int win_width, int win_height, ALLEGRO_COLOR bg_color)
 {
+    cout << "Window created at " << this << endl;
+    
     Window::width = width;
     Window::height = height;
     winWidth = win_width;
@@ -83,11 +89,11 @@ int Window::get_win_height()
 {
     return winHeight;
 }
-int Window::get_pix_width()
+float Window::get_pix_width()
 {
     return pixWidth;
 }
-int Window::get_pix_height()
+float Window::get_pix_height()
 {
     return pixHeight;
 }
@@ -149,7 +155,10 @@ bool Window::is_pointer_visible()
 void Window::update()
 {
     if (al_get_target_bitmap() != al_get_backbuffer(disp))
+    {
+        cout << "uh oh" << endl;
         al_set_target_backbuffer(disp);
+    }
     
     al_clear_to_color(bgColor);
     al_draw_scaled_bitmap(bitmap, 0, 0, width, height, bmpx, bmpy, width * pixWidth, height * pixHeight, 0);

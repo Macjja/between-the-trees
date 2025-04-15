@@ -35,8 +35,8 @@ class Window
         int get_height();
         int get_win_width();
         int get_win_height();
-        int get_pix_width();
-        int get_pix_height();
+        float get_pix_width();
+        float get_pix_height();
         int get_bitmap_x();
         int get_bitmap_y();
         

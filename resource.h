@@ -21,13 +21,12 @@ class ResourceLoader
     public:
         ResourceLoader();
         ~ResourceLoader();
-        void load(int);
+        void load(int, void*);
         ALLEGRO_FONT* get_font() const;
         ALLEGRO_BITMAP* get_text_container() const;
         ALLEGRO_BITMAP* get_name_container() const;
         ALLEGRO_BITMAP* get_background(int) const;
-        Scene* get_scene(int) const;
-        Scene** get_all_loaded_scenes() const;
+        Scene** get_scenes() const;
         int get_num_scenes() const;
     
     private:

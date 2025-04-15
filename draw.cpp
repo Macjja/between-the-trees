@@ -1,17 +1,17 @@
 /* Implementation of the drawing thread */
 
+#include <iostream>
 #include "draw.h"
+
+using namespace std;
 
 void* drawer(ALLEGRO_THREAD* thr, void* arg)
 {
-    Game* game = (Game*)arg;
-    Window& window = game->get_window();
-    ResourceLoader& data = game->get_data();
+    Game& game = *(Game*)arg;
+    Window* window = game.get_window();
+    ResourceLoader& data = game.get_data();
     Scene* scene;
-    Dialogue* dialogue;
-    
-    al_set_target_backbuffer(window.get_display());
-    window.update();
+    Dialogue& dialogueBox = game.get_dialogue_box();
     
     ALLEGRO_TIMER* fpsTimer = al_create_timer(1.0 / 60.0);
     ALLEGRO_EVENT_QUEUE* fpsQueue = al_create_event_queue();
@@ -22,30 +22,34 @@ void* drawer(ALLEGRO_THREAD* thr, void* arg)
     
     while (true)
     {
-        al_set_target_bitmap(window.get_bitmap());
-        window.clear();
+        al_set_target_bitmap(window->get_bitmap());
+        window->clear();
         
-        scene = game->get_scene();
+        al_draw_filled_rectangle(0, 0, 640, 480, al_map_rgba(0, 0, 255, 255));
+        
+        scene = game.get_scene();
         if (scene != NULL)
         {
             scene->draw();
         }
         
-        dialogue = game->get_dialogue_box();
-        if (dialogue != NULL)
+        if (dialogueBox.get_state() != 0)
         {
-            dialogue->draw(360);
+            dialogueBox.draw(300);
+            if ((clock() - dialogueBox.dialogueStartTime) % 2 == 0 && dialogueBox.get_state() == 1)
+                dialogueBox.next_char();
         }
         
-        al_set_target_backbuffer(window.get_display());
-        window.update();
+        al_set_target_backbuffer(window->get_display());
+        window->update();
         
-        if (game->should_stop())
+        if (game.should_stop())
         {
             break;
         }
         al_wait_for_event(fpsQueue, &event);
     }
+    al_set_target_bitmap(NULL);
     
     al_destroy_event_queue(fpsQueue);
     al_destroy_timer(fpsTimer);

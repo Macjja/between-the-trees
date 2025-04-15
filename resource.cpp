@@ -4,7 +4,12 @@
  * have any resources to load.
 */
 
+#include <iostream>
+
 #include "resource.h"
+#include "func.h"
+
+using namespace std;
 
 ResourceLoader::ResourceLoader()
 {
@@ -23,17 +28,32 @@ ResourceLoader::~ResourceLoader()
     al_destroy_bitmap(nameContainer);
     for (int i = 0; i < numBackgrounds; i++)
         al_destroy_bitmap(backgrounds[i]);
+    free(backgrounds);
     for (int i = 0; i < numScenes; i++)
     {
         delete loadedScenes[i];
     }
+    free(loadedScenes);
 }
 
-void ResourceLoader::load(int bank)
+void ResourceLoader::load(int bank, void* gm_ptr)
 {
     //more coming soon!
     switch (bank)
     {
+        case 0:
+        {
+            textContainer = al_load_bitmap("./dialogue.png");
+            nameContainer = al_load_bitmap("./name_container.png");
+            numBackgrounds = 1;
+            backgrounds = (ALLEGRO_BITMAP**)malloc(sizeof(void*));
+            backgrounds[0] = al_load_bitmap("./background/test.png");
+            numScenes = 1;
+            loadedScenes = (Scene**)malloc(sizeof(void*));
+            loadedScenes[0] = new Scene(gm_ptr, backgrounds[0], &scene0, NULL, NULL, &scene0_end);
+            cout << "Loaded scenes: " << loadedScenes << endl << "[0]: " << loadedScenes[0] << endl;
+            break;
+        }
         default:
             break;
     }
@@ -55,11 +75,7 @@ ALLEGRO_BITMAP* ResourceLoader::get_background(int index) const
 {
     return backgrounds[index];
 }
-Scene* ResourceLoader::get_scene(int index) const
-{
-    return loadedScenes[index];
-}
-Scene** ResourceLoader::get_all_loaded_scenes() const
+Scene** ResourceLoader::get_scenes() const
 {
     return loadedScenes;
 }

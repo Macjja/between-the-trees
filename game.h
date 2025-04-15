@@ -17,12 +17,14 @@ class Game {
     public:
         Game(void* (*)(ALLEGRO_THREAD*, void*), void* (*)(ALLEGRO_THREAD*, void*));
         ~Game();
-        Window& get_window();
+        Window* get_window();
         ResourceLoader& get_data();
+        bool set_scene(int);
         Scene* get_scene();
         int& get_scene_index();
-        void set_dialogue_box(Dialogue*);
-        Dialogue* get_dialogue_box() const;
+        Dialogue& get_dialogue_box() const;
+        void set_text(string);
+        void set_text(string, string);
         void set_flag(int, bool);
         bool get_flag(int) const;
         void set_mouse_coords(int, int);
@@ -33,10 +35,11 @@ class Game {
     private:
         Window* window;
         ResourceLoader* data;
+        Dialogue* dialogueBox;
+        Scene** scenes;
         ALLEGRO_THREAD* eventThread;
         ALLEGRO_THREAD* drawingThread;
         int currentScene;
-        Dialogue* dialogueBox;
         int flags;
         int mouseX;
         int mouseY;
