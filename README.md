@@ -11,4 +11,4 @@ It may not do much, but at least it works!
 
 ## On Windows
 I've also included a pre-compiled Windows executable. If you're using Windows, the only files you should need are "between_the_trees.exe" (the main program), "dialogue.png" and "name_container.png" (the two placeholder textures for the dialogue box), and the "background" folder.
-Make sure they're all downloaded into the same folder.
+Make sure they're all downloaded into the same location.
